@@ -5,12 +5,19 @@ import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, BookOpen, Check, 
 import Brazil from "@svg-maps/brazil";
 import catalog from "../public/data/catalog.json";
 import UnitLeader from "./components/unit-leader";
+import MunicipalityComparison from "./components/municipality-comparison";
+import municipalCatalog from "../public/data/municipalities.json";
+import { compareCandidates, municipalityKey, type MunicipalityVotes } from "../lib/municipality-comparison";
 
 type Kind = "presidio" | "socioeducativa" | "unclassified";
-type Unit = { id: string; name: string; kind: Kind; uf: string; municipality: string; latitude: number | null; longitude: number | null; sections: { year: number; turn: number; evidence_url: string; matched?: boolean }[] };
+type Unit = { id: string; name: string; kind: Kind; uf: string; municipality: string; latitude: number | null; longitude: number | null; sections: { year: number; turn: number; evidence_url: string; municipality_code: number; matched?: boolean }[] };
 type Result = { unit_id: string; year: number; turn: number; valid: number; blank: number; null: number; total: number; section_count: number; candidates: { number: number; name: string; votes: number }[] };
-type Dataset = { status: string; units: Unit[]; results: Result[]; sources: { url: string; retrieved_at: string; label?: string }[]; elections: { year: number; status: string }[]; limitations?: string[] };
+type Dataset = { status: string; units: Unit[]; results: Result[]; sources: { url: string; retrieved_at: string; label?: string; sha256?: string }[]; elections: { year: number; status: string }[]; limitations?: string[] };
 const data = catalog as unknown as Dataset;
+const municipalYears = new Set(municipalCatalog.sources.filter(source => data.sources.some(current => current.url === source.url && current.sha256 === source.sha256)).map(source => source.year));
+const municipalityIndex = new Map((municipalCatalog.results as unknown as MunicipalityVotes[])
+  .filter(result => municipalYears.has(result.year))
+  .map(result => [municipalityKey(result.year, result.turn, result.uf, result.municipality_code), result]));
 const format = (value: number) => new Intl.NumberFormat("pt-BR").format(value);
 const labels: Record<Kind, string> = { presidio: "Presídio", socioeducativa: "Unidade socioeducativa", unclassified: "Custódia · a classificar" };
 const states = [...Brazil.locations].sort((a, b) => a.name.localeCompare(b.name, "pt-BR"));
@@ -59,16 +66,30 @@ export default function Home() {
   }, [year, turn, kind]);
   const update = (action: () => void) => { action(); setUnitId(null); };
   const toggleUf = (code: string) => update(() => setUf(current => current === code ? "all" : code));
+  const changeTurn = (value: number) => {
+    setTurn(value);
+    setUnitId(current => current && data.units.find(unit => unit.id === current)?.sections.some(section => section.year === year && section.turn === value) ? current : null);
+  };
+  const selectUnit = (id: string) => {
+    const next = unitId === id ? null : id;
+    setUnitId(next);
+    if (next) requestAnimationFrame(() => document.getElementById("comparacao-municipal")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" }));
+  };
   const selection = `${year} · ${turn}º turno`;
   const hasData = data.results.length > 0;
   const hasSources = data.sources.length > 0;
   const selectedUnits = units.filter(unit => !unitId || unit.id === unitId);
   const selectedSections = selectedUnits.flatMap(unit => unit.sections.filter(section => section.year === year && section.turn === turn));
   const matchedCount = selectedSections.filter(section => section.matched).length;
+  const comparisonUnit = unitId ? selectedUnits[0] : undefined;
+  const comparisonSection = comparisonUnit?.sections.find(section => section.year === year && section.turn === turn);
+  const comparisonMunicipality = comparisonUnit && comparisonSection ? municipalityIndex.get(municipalityKey(year, turn, comparisonUnit.uf, comparisonSection.municipality_code)) : undefined;
+  const comparisonVotes = comparisonUnit ? unitResults.get(comparisonUnit.id) : undefined;
   const clearScope = () => { setUf("all"); setKind("all"); setQuery(""); setUnitId(null); };
 
   function download() {
-    const payload = { description: "Votos nas seções identificadas, sem atribuição individual. Cobertura parcial.", year, turn, coverage: { registered_sections: selectedSections.length, matched_sections: matchedCount }, limitations: data.limitations, filters: { kind, uf, query, unitId }, units: units.filter(unit => !unitId || unit.id === unitId), results, sources: data.sources };
+    const municipalityComparison = comparisonUnit ? { scope: "entire_municipality_including_units", unit_id: comparisonUnit.id, unit_result_available: !!comparisonVotes, municipality: comparisonMunicipality ?? null, rows: comparisonVotes && comparisonMunicipality ? compareCandidates(comparisonVotes, comparisonMunicipality) : [], sources: municipalCatalog.sources.filter(source => source.year === year) } : null;
+    const payload = { municipality_comparison: municipalityComparison, description: "Votos nas seções identificadas, sem atribuição individual. Cobertura parcial.", year, turn, coverage: { registered_sections: selectedSections.length, matched_sections: matchedCount }, limitations: data.limitations, filters: { kind, uf, query, unitId }, units: units.filter(unit => !unitId || unit.id === unitId), results, sources: data.sources };
     const link = document.createElement("a");
     link.href = URL.createObjectURL(new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" }));
     link.download = `voto-sob-custodia-${year}-turno-${turn}.json`;
@@ -119,7 +140,7 @@ export default function Home() {
         <div className="wrap"><div className="section-heading"><div><span className="eyebrow">02 / EXPLORE O TERRITÓRIO</span><h2>Onde o voto acontece.</h2></div><p>Locais do recorte oficial de custódia do TSE. Selecione uma UF; os subtipos ainda não confirmados aparecem como “A classificar”.</p></div>
           <div className="filter-row">
             <label>Eleição<span className="select-wrap"><select value={year} onChange={e => update(() => setYear(Number(e.target.value)))}><option value={2018}>2018</option><option value={2022}>2022</option><option value={2026}>2026</option></select><ChevronDown size={15} /></span></label>
-            <label>Turno<span className="select-wrap"><select value={turn} onChange={e => update(() => setTurn(Number(e.target.value)))}><option value={1}>1º turno</option><option value={2}>2º turno</option></select><ChevronDown size={15} /></span></label>
+            <label>Turno<span className="select-wrap"><select value={turn} onChange={e => changeTurn(Number(e.target.value))}><option value={1}>1º turno</option><option value={2}>2º turno</option></select><ChevronDown size={15} /></span></label>
             <label>Estado<span className="select-wrap"><select value={uf} onChange={e => update(() => setUf(e.target.value))}><option value="all">Todo o Brasil</option>{states.map(state => <option value={ufOf(state.id)} key={state.id}>{state.name}</option>)}</select><ChevronDown size={15} /></span></label>
             <div className="type-filter" role="group" aria-label="Tipo de unidade">{([["all", "Todas"], ["presidio", "Presídios"], ["socioeducativa", "Socioeducativas"], ["unclassified", "A classificar"]] as const).map(([value, label]) => <button key={value} aria-pressed={kind === value} className={kind === value ? "active" : ""} onClick={() => update(() => setKind(value))}>{value !== "all" && <span className={`legend-dot ${value}`} />}{label}</button>)}</div>
           </div>
@@ -134,7 +155,7 @@ export default function Home() {
               <span className="map-attribution">Base: <a href="https://github.com/VictorCazanave/svg-maps/tree/master/packages/brazil" target="_blank" rel="noreferrer">SVG Maps</a> / <a href="https://mapsvg.com/maps/brazil" target="_blank" rel="noreferrer">MapSVG</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>. Mapa adaptado.</span>
             </div>
             <aside className="units-panel" aria-label="Unidades do recorte"><div className="units-heading"><h3>Unidades do recorte</h3><span>{selection}</span></div><label className="search-field"><Search size={17} /><input aria-label="Buscar unidade ou município" placeholder="Busque unidade ou município" value={query} onChange={e => update(() => setQuery(e.target.value))} /></label>
-              <div className="unit-list" aria-live="polite">{units.length ? units.map(unit => <button key={unit.id} className={`unit-card ${unitId === unit.id ? "chosen" : ""}`} aria-pressed={unitId === unit.id} onClick={() => setUnitId(unitId === unit.id ? null : unit.id)}><span className={`unit-kind ${unit.kind}`}>{labels[unit.kind]}</span><strong>{unit.name}</strong><span>{unit.municipality} · {unit.uf}</span><UnitLeader result={unitResults.get(unit.id)} /><span className="unit-action">{unitId === unit.id ? "Remover seleção" : "Ver resultados"} <ArrowRight size={13} /></span></button>) : <div className="empty-units"><span className="empty-icon"><MapPin size={25} strokeWidth={1.4} /></span><h4>{hasData ? "Nenhuma unidade neste recorte" : "O cadastro começa pela verificação."}</h4><p>{hasData ? "Experimente Todas ou A classificar. Sem classificação confirmada não significa ausência de votos; a separação entre presídios e socioeducativas ainda está em revisão." : "Ainda não há unidades validadas publicadas. Primeiro, precisamos confirmar o vínculo entre cada estabelecimento e suas seções eleitorais."}</p><button className="text-button" onClick={clearScope}>Mostrar todos os locais <ArrowRight size={14} /></button></div>}</div>
+              <div className="unit-list" aria-live="polite">{units.length ? units.map(unit => <button key={unit.id} className={`unit-card ${unitId === unit.id ? "chosen" : ""}`} aria-pressed={unitId === unit.id} onClick={() => selectUnit(unit.id)}><span className={`unit-kind ${unit.kind}`}>{labels[unit.kind]}</span><strong>{unit.name}</strong><span>{unit.municipality} · {unit.uf}</span><UnitLeader result={unitResults.get(unit.id)} /><span className="unit-action">{unitId === unit.id ? "Remover seleção" : "Ver resultados e comparar"} <ArrowRight size={13} /></span></button>) : <div className="empty-units"><span className="empty-icon"><MapPin size={25} strokeWidth={1.4} /></span><h4>{hasData ? "Nenhuma unidade neste recorte" : "O cadastro começa pela verificação."}</h4><p>{hasData ? "Experimente Todas ou A classificar. Sem classificação confirmada não significa ausência de votos; a separação entre presídios e socioeducativas ainda está em revisão." : "Ainda não há unidades validadas publicadas. Primeiro, precisamos confirmar o vínculo entre cada estabelecimento e suas seções eleitorais."}</p><button className="text-button" onClick={clearScope}>Mostrar todos os locais <ArrowRight size={14} /></button></div>}</div>
               <div className="units-note"><Info size={15} /><span>Sem dados não significa sem votação.</span></div>
             </aside>
           </div>
@@ -146,6 +167,7 @@ export default function Home() {
         <div className="result-warning"><ShieldCheck size={19} /><p><strong>Votos nas seções identificadas.</strong> Os totais podem incluir servidores e mesários. Não permitem atribuir escolhas individuais às pessoas sob custódia.</p></div>
         <div aria-live="polite">{results.length ? <div className="results-data"><div className="result-summary"><span><strong>{format(matchedCount)}</strong> seções com votos</span><span><strong>{format(tally.valid)}</strong> votos válidos</span><span><strong>{format(tally.blank)}</strong> brancos</span><span><strong>{format(tally.nullVotes)}</strong> nulos</span></div>{tally.candidates.map(candidate => <div className="candidate" key={candidate.number}><div><strong>{candidate.name}</strong><span>{format(candidate.votes)} votos · {tally.valid ? (100 * candidate.votes / tally.valid).toLocaleString("pt-BR", { maximumFractionDigits: 2 }) : "—"}{tally.valid ? "% dos válidos" : " (sem votos válidos)"}</span></div><div className="candidate-track"><span style={{ width: `${tally.valid ? 100 * candidate.votes / tally.valid : 0}%` }} /></div></div>)}</div> : <div className="results-empty"><div className="empty-icon"><Database size={27} strokeWidth={1.4} /></div><div><h3>{hasData ? "Não há resultados publicados para este recorte." : "Antes dos números, a confiança nos dados."}</h3><p>{hasData ? "Revise os filtros. Não é possível inferir zero votos a partir da ausência de registros." : "Os resultados aparecerão após o cruzamento da votação oficial do TSE com o cadastro revisado de seções. Não exibimos estimativas nem resultados demonstrativos."}</p></div><span className="pending-badge">{hasData ? "SEM REGISTROS" : "AGUARDANDO VALIDAÇÃO"}</span></div>}</div>
         <div className="result-footer"><p>{results.length ? `${matchedCount} de ${selectedSections.length} seções principais cadastradas neste recorte têm votação correspondente. ` : ""}Percentuais sobre votos válidos. Turnos separados; cobertura parcial.</p><button className="text-button" disabled={!results.length} onClick={download}><ArrowDownToLine size={15} /> Baixar dados do recorte</button></div>
+        {comparisonUnit ? <MunicipalityComparison unitName={comparisonUnit.name} year={year} turn={turn} unit={comparisonVotes} municipality={comparisonMunicipality} /> : <div className="comparison-prompt"><Info size={18} /><p>Selecione uma unidade na lista para comparar seus votos com o <strong>município inteiro, incluindo as seções da unidade</strong>.</p></div>}
       </section>
 
       <section id="metodologia" className="method-section"><div className="wrap"><div className="section-heading"><div><span className="eyebrow">04 / TRANSPARÊNCIA POR PRINCÍPIO</span><h2>Cada número precisa<br />de um caminho até a fonte.</h2></div><p>Arquivos locais de 2018, 2022 e 2026, com vínculo por eleição, turno, UF, município, zona e seção. Lacunas ficam fora dos totais e são documentadas.</p></div>

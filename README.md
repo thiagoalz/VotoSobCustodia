@@ -84,6 +84,12 @@ O site incorpora o catálogo no build: alterar o JSON exige novo build ou reiní
 
 Para reproduzir o catálogo público com votos das três eleições, execute `python -m pipeline.publish_catalog`. A aquisição não é repetida: esse comando verifica e processa somente arquivos locais, documenta as seções excluídas e preserva a separação entre anos e turnos. A conferência com boletins e a classificação dos subtipos continuam pendentes. O importador manual por UF acima permanece disponível para cadastros revisados; o publicador nacional é um fluxo separado, com classificação inicial explícita **A classificar**.
 
+## Comparação com o município
+
+Ao selecionar uma unidade, o site compara os votos com o **município inteiro, incluindo a unidade**. Há votos e percentuais por candidato, barras na mesma escala e diferenças em pontos percentuais. O download contém os dois recortes. Consulte [docs/COMPARACAO-MUNICIPAL.md](docs/COMPARACAO-MUNICIPAL.md).
+
+Reproduza os totais com `python -m pipeline.publish_municipalities`, depois de gerar o catálogo de unidades. O comando lê todas as seções dos municípios relevantes nos ZIPs nacionais já arquivados e grava `public/data/municipalities.json`, sem acesso à rede. A interface recusa resultados municipais cujas fontes não correspondam à versão do catálogo.
+
 ## Preservação dos originais grandes
 
 Os ZIPs estão configurados em `.gitattributes` para **Git LFS**, que foi inicializado localmente. Os maiores arquivos nacionais excedem o limite do Git comum. Para um futuro clone após o envio do projeto e dos objetos LFS, use `git lfs install` e `git lfs pull`. Verifique com `python -m pipeline.snapshot verify` antes de processar: um ponteiro LFS sem o conteúdo real falhará na conferência. **Nenhum commit, push ou upload LFS foi feito nesta aquisição.** Os originais estão no checkout local.
