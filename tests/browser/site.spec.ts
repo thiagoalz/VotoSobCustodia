@@ -3,16 +3,17 @@ import { expect, test } from "@playwright/test";
 test("preserva o contexto e não apresenta ausência de dados como zero votos", async ({ page }, testInfo) => {
   const errors: string[] = [];
   const externalRequests: string[] = [];
+  const siteOrigin = new URL(testInfo.project.use.baseURL!).origin;
   await page.route("**/*", route => {
     const url = new URL(route.request().url());
-    if (url.origin !== "http://127.0.0.1:3000") {
+    if (url.origin !== siteOrigin) {
       externalRequests.push(url.origin);
       return route.abort();
     }
     return route.continue();
   });
   page.on("pageerror", error => errors.push(error.message));
-  await page.goto("/");
+  await page.goto("./");
   await expect(page.getByRole("heading", { level: 1 })).toContainText("O direito ao voto");
   await expect(page.getByText("Arquivos oficiais preservados localmente.", { exact: false })).toBeVisible();
   await expect(page.getByRole("button", { name: "Baixar dados do recorte" })).toBeDisabled();

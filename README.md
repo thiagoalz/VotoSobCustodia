@@ -33,6 +33,8 @@ O processo usa a porta 3000. A aplicação não precisa de chaves, banco de dado
 
 ## Verificar
 
+Para publicar uma versão online de testes, consulte [docs/PUBLICACAO.md](docs/PUBLICACAO.md). O build estático é `npm run build:pages`; ele usa arquivos locais e não inclui os ZIPs brutos no site.
+
 ```sh
 npm run typecheck
 npm run test:data
