@@ -1,8 +1,10 @@
 {
-  "source_commit": "452a6b040da97156ab4218bf530af8e8dac02558",
-  "built_at": "2026-11-01T18:05:58.015560+00:00",
+  "source_commit": "2681eb65965ca13ba68b4d325724ddf3117331e7",
+  "built_at": "2026-11-01T18:55:39.616368+00:00",
   "base_path": "/VotoSobCustodia",
   "result_records": 1363,
+  "municipal_result_records": 976,
+  "municipal_scope": "entire_municipality_including_units",
   "elections": [
     2018,
     2022,
