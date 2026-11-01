@@ -1,5 +1,11 @@
 {
-  "source_commit": "3b585aec70b815487a0ea07e78aba98c3c42e039",
-  "built_at": "2026-11-01T15:39:20.083601+00:00",
-  "base_path": "/VotoSobCustodia"
+  "source_commit": "5f251c2aacbc215ff21d3d129d800225c3037dcf",
+  "built_at": "2026-11-01T16:02:36.829671+00:00",
+  "base_path": "/VotoSobCustodia",
+  "result_records": 1363,
+  "elections": [
+    2018,
+    2022,
+    2026
+  ]
 }
