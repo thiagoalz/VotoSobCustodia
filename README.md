@@ -9,7 +9,8 @@ Site independente sobre o direito ao voto e os resultados **nas seções eleitor
 - Importação de CSV/ZIP do TSE preparada e testada com dados sintéticos, restritos aos testes.
 - **18 arquivos oficiais do TSE baixados e preservados**, totalizando 1.108.104.032 bytes: votação nacional para presidente em 2018, 2022 e 2026, cadastros de locais, transferências e metadados. Veja [o manifesto](data/official/manifest.json).
 - O cruzamento preliminar do DF/2022 encontrou votação nas 16 seções/turnos de oito locais classificados pelo TSE como `Preso provisório`. Isso ainda não separa presídios de unidades socioeducativas nem equivale a conferência com boletins de urna.
-- O catálogo público lista as fontes adquiridas, mas não publica resultados ainda. O mapa atual é um seletor por UF; pontos das unidades e classificação por categoria ainda dependem de revisão.
+- **O catálogo público agora mostra votos reais de 2018, 2022 e 2026:** 686 registros de local/eleição e 1.363 resultados de local/turno, obtidos pelo cruzamento dos arquivos oficiais. Consulte [docs/DADOS-PUBLICADOS.md](docs/DADOS-PUBLICADOS.md) para cobertura e lacunas.
+- Os locais do recorte oficial `CD_TIPO_LOCAL=3` aparecem como **A classificar** quando o subtipo prisional/socioeducativo não foi confirmado. Os filtros de categorias são separados; nenhuma classificação foi inventada pelo nome. O mapa atual é por UF.
 - O bloqueio inicial de rede foi resolvido após a publicação do ambiente. A síntese jurídica ainda requer conferência da legislação e das regras aplicáveis a cada eleição. Nenhuma configuração do ambiente foi alterada durante a aquisição.
 
 ## Executar
@@ -79,6 +80,8 @@ Os originais já foram baixados. **Não é necessário consultar novamente o cat
    A saída é um catálogo JSON. Primeiro gere um arquivo intermediário em `data/reviewed/` e confira os totais. Só depois substitua `public/data/catalog.json` e reconstrua o site. A versão inicial do importador gera um catálogo para um ano/UF; **não mescla catálogos de anos ou estados diferentes**. A consolidação nacional é uma próxima etapa.
 
 O site incorpora o catálogo no build: alterar o JSON exige novo build ou reinício do desenvolvimento. Não publicar fixtures dos testes como dados reais.
+
+Para reproduzir o catálogo público com votos das três eleições, execute `python -m pipeline.publish_catalog`. A aquisição não é repetida: esse comando verifica e processa somente arquivos locais, documenta as seções excluídas e preserva a separação entre anos e turnos. A conferência com boletins e a classificação dos subtipos continuam pendentes. O importador manual por UF acima permanece disponível para cadastros revisados; o publicador nacional é um fluxo separado, com classificação inicial explícita **A classificar**.
 
 ## Preservação dos originais grandes
 

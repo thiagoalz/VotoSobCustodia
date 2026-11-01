@@ -1,0 +1,483 @@
+{
+  "generated_at": "2026-11-01T15:51:36.549319+00:00",
+  "network_used": false,
+  "years": [
+    {
+      "year": 2018,
+      "coverage": [
+        {
+          "year": 2018,
+          "turn": 1,
+          "registered_principal_sections": 223,
+          "matched_sections": 220,
+          "locations_with_results": 219,
+          "valid": 8557,
+          "blank": 410,
+          "null": 364,
+          "total": 9331
+        },
+        {
+          "year": 2018,
+          "turn": 2,
+          "registered_principal_sections": 223,
+          "matched_sections": 219,
+          "locations_with_results": 218,
+          "valid": 7909,
+          "blank": 179,
+          "null": 480,
+          "total": 8568
+        }
+      ],
+      "excluded": [
+        {
+          "key": [
+            2018,
+            2,
+            "PE",
+            23230,
+            57,
+            186
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "149"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "PE",
+            23558,
+            60,
+            170
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "28"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "PE",
+            24716,
+            59,
+            105
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "47"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "CE",
+            13480,
+            78,
+            354
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "291"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "CE",
+            14958,
+            57,
+            308
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "10"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "PE",
+            25917,
+            50,
+            111
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "106"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "CE",
+            13480,
+            78,
+            354
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "291"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "CE",
+            13730,
+            120,
+            439
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "254"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "PE",
+            24716,
+            59,
+            105
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "47"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "PE",
+            23558,
+            60,
+            170
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "28"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "CE",
+            15598,
+            121,
+            315
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "10"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "CE",
+            14958,
+            57,
+            308
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "10"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "CE",
+            15598,
+            121,
+            315
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "10"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "CE",
+            13480,
+            78,
+            357
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "293"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "SP",
+            64254,
+            291,
+            341
+          ],
+          "reason": "inconsistent_location_name"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "CE",
+            13480,
+            78,
+            357
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "293"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "PE",
+            25917,
+            50,
+            111
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "106"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "CE",
+            13480,
+            78,
+            356
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "291"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "PE",
+            23230,
+            57,
+            186
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "149"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "CE",
+            13730,
+            120,
+            439
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "254"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "CE",
+            13480,
+            78,
+            356
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "291"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "BA",
+            38490,
+            5,
+            801
+          ],
+          "reason": "no_corresponding_vote_rows"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "RS",
+            88013,
+            159,
+            521
+          ],
+          "reason": "no_corresponding_vote_rows"
+        },
+        {
+          "key": [
+            2018,
+            2,
+            "RS",
+            88013,
+            159,
+            523
+          ],
+          "reason": "no_corresponding_vote_rows"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "RS",
+            88013,
+            159,
+            523
+          ],
+          "reason": "no_corresponding_vote_rows"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "RS",
+            88013,
+            159,
+            521
+          ],
+          "reason": "no_corresponding_vote_rows"
+        },
+        {
+          "key": [
+            2018,
+            1,
+            "BA",
+            38490,
+            5,
+            801
+          ],
+          "reason": "no_corresponding_vote_rows"
+        }
+      ],
+      "scanned_vote_rows": 6616660
+    },
+    {
+      "year": 2022,
+      "coverage": [
+        {
+          "year": 2022,
+          "turn": 1,
+          "registered_principal_sections": 222,
+          "matched_sections": 221,
+          "locations_with_results": 220,
+          "valid": 11024,
+          "blank": 167,
+          "null": 172,
+          "total": 11363
+        },
+        {
+          "year": 2022,
+          "turn": 2,
+          "registered_principal_sections": 222,
+          "matched_sections": 221,
+          "locations_with_results": 220,
+          "valid": 9999,
+          "blank": 128,
+          "null": 196,
+          "total": 10323
+        }
+      ],
+      "excluded": [
+        {
+          "key": [
+            2022,
+            1,
+            "AM",
+            2550,
+            68,
+            797
+          ],
+          "reason": "no_corresponding_vote_rows"
+        },
+        {
+          "key": [
+            2022,
+            2,
+            "AM",
+            2550,
+            68,
+            797
+          ],
+          "reason": "no_corresponding_vote_rows"
+        }
+      ],
+      "scanned_vote_rows": 5380736
+    },
+    {
+      "year": 2026,
+      "coverage": [
+        {
+          "year": 2026,
+          "turn": 1,
+          "registered_principal_sections": 243,
+          "matched_sections": 243,
+          "locations_with_results": 243,
+          "valid": 11190,
+          "blank": 259,
+          "null": 230,
+          "total": 11679
+        },
+        {
+          "year": 2026,
+          "turn": 2,
+          "registered_principal_sections": 243,
+          "matched_sections": 243,
+          "locations_with_results": 243,
+          "valid": 10556,
+          "blank": 142,
+          "null": 160,
+          "total": 10858
+        }
+      ],
+      "excluded": [
+        {
+          "key": [
+            2026,
+            1,
+            "SP",
+            70572,
+            306,
+            286
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "285"
+        },
+        {
+          "key": [
+            2026,
+            2,
+            "PE",
+            25615,
+            44,
+            206
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "100"
+        },
+        {
+          "key": [
+            2026,
+            2,
+            "SP",
+            70572,
+            306,
+            286
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "285"
+        },
+        {
+          "key": [
+            2026,
+            1,
+            "PE",
+            25615,
+            44,
+            206
+          ],
+          "reason": "aggregated_section_not_attributed",
+          "principal": "100"
+        }
+      ],
+      "scanned_vote_rows": 5731614
+    }
+  ]
+}

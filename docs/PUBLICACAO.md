@@ -34,4 +34,4 @@ Para executar em desenvolvimento, continue usando `npm run dev`. Para o servidor
 
 O Playwright aceita `TEST_BASE_URL` para exercitar os mesmos filtros, seleção de UF, navegação móvel e ausência de chamadas externas em um servidor estático já iniciado. O endereço deve terminar em `/VotoSobCustodia/` para conferir o prefixo de publicação. Sem essa variável, `npm run test:e2e` usa o servidor Next normal.
 
-Os resultados eleitorais por categoria continuam em revisão. A versão online permite testar a interface e mostra explicitamente essa limitação.
+A versão agora mostra votos reais do recorte oficial de custódia do TSE para 2018, 2022 e 2026. Os subtipos presídio/socioeducativa ainda não confirmados aparecem como **A classificar**; as lacunas e a ausência de conferência independente com todos os boletins são explícitas. Consulte `docs/DADOS-PUBLICADOS.md`.
