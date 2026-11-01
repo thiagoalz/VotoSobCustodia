@@ -1,0 +1,12 @@
+node_modules/
+.next/
+out/
+data/raw/
+data/official/.downloads/
+__pycache__/
+*.pyc
+test-results/
+playwright-report/
+*.tsbuildinfo
+.env*
+!.env.example

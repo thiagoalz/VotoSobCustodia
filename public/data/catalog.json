@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "status": "awaiting_review",
+  "pilot": {
+    "year": 2022,
+    "uf": "DF",
+    "status": "crosscheck_pending_review"
+  },
+  "elections": [
+    {
+      "year": 2018,
+      "status": "downloaded_awaiting_review"
+    },
+    {
+      "year": 2022,
+      "status": "downloaded_awaiting_review"
+    },
+    {
+      "year": 2026,
+      "status": "downloaded_awaiting_review"
+    }
+  ],
+  "units": [],
+  "results": [],
+  "sources": [
+    {
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/eleitorado_locais_votacao/eleitorado_local_votacao_2018.zip",
+      "retrieved_at": "2026-11-01",
+      "label": "2018 · Eleitorado por local de votação",
+      "sha256": "a0478dd3ad7b3ce7332058121f280d98454e3e7a4a54d146aee943402a544fb4"
+    },
+    {
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2018_BR.zip",
+      "retrieved_at": "2026-11-01",
+      "label": "2018 · Presidente · votação por seção",
+      "sha256": "dde2250058a7efa3b7ee336520556905456cb75d7debf99ea4badfc4d598a48c"
+    },
+    {
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/eleitorado_locais_votacao/eleitorado_local_votacao_2022.zip",
+      "retrieved_at": "2026-11-01",
+      "label": "2022 · Eleitorado por local de votação",
+      "sha256": "6dc19c1ddb746cc067469e70ad5018f202334d97cd540edc8c9de3321e66da23"
+    },
+    {
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2022_BR.zip",
+      "retrieved_at": "2026-11-01",
+      "label": "2022 · Presidente · votação por seção",
+      "sha256": "9353993de5cf03778aef44e01d4925e7ee105f5262491d344a2f0dbc956b0139"
+    },
+    {
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/eleitorado_locais_votacao/eleitorado_local_votacao_2026.zip",
+      "retrieved_at": "2026-11-01",
+      "label": "2026 · Eleitorado por local de votação",
+      "sha256": "771ecfe5086b65c38943df9f694831dc5b94e0addd563517cd139fbd97642981"
+    },
+    {
+      "url": "https://cdn.tse.jus.br/estatistica/sead/odsele/votacao_secao/votacao_secao_2026_BR.zip",
+      "retrieved_at": "2026-11-01",
+      "label": "2026 · Presidente · votação por seção",
+      "sha256": "c928321f63f2d095706fca73d4607c048d2ada23bda6876455d6911aaf1bc9c1"
+    }
+  ]
+}
