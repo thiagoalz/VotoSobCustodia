@@ -38,6 +38,7 @@ Para publicar uma versão online de testes, consulte [docs/PUBLICACAO.md](docs/P
 
 ```sh
 npm run typecheck
+npm run test:ui
 npm run test:data
 npm run build
 npm run test:e2e

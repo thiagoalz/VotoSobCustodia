@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, CircleHelp, Database, FileCheck2, Fingerprint, Info, Landmark, MapPin, Search, ShieldCheck, SlidersHorizontal, X } from "lucide-react";
 import Brazil from "@svg-maps/brazil";
 import catalog from "../public/data/catalog.json";
+import UnitLeader from "./components/unit-leader";
 
 type Kind = "presidio" | "socioeducativa" | "unclassified";
 type Unit = { id: string; name: string; kind: Kind; uf: string; municipality: string; latitude: number | null; longitude: number | null; sections: { year: number; turn: number; evidence_url: string; matched?: boolean }[] };
@@ -34,6 +35,11 @@ export default function Home() {
     const ids = new Set(units.filter(unit => !unitId || unit.id === unitId).map(unit => unit.id));
     return data.results.filter(result => result.year === year && result.turn === turn && ids.has(result.unit_id));
   }, [units, unitId, year, turn]);
+  // O resumo de cada cartão independe da unidade selecionada no detalhamento.
+  const unitResults = useMemo(() => new Map(
+    data.results.filter(result => result.year === year && result.turn === turn)
+      .map(result => [result.unit_id, result])
+  ), [year, turn]);
   const tally = useMemo(() => {
     const candidates = new Map<number, { number: number; name: string; votes: number }>();
     let valid = 0, blank = 0, nullVotes = 0;
@@ -52,6 +58,7 @@ export default function Home() {
     return counts;
   }, [year, turn, kind]);
   const update = (action: () => void) => { action(); setUnitId(null); };
+  const toggleUf = (code: string) => update(() => setUf(current => current === code ? "all" : code));
   const selection = `${year} · ${turn}º turno`;
   const hasData = data.results.length > 0;
   const hasSources = data.sources.length > 0;
@@ -121,13 +128,13 @@ export default function Home() {
             <div className="map-panel"><div className="map-topline"><span>BRASIL / {uf === "all" ? "TODAS AS UFs" : uf}</span><span>CADASTRO POR UF</span></div>
               <svg className="brazil-map" viewBox={Brazil.viewBox} aria-label="Mapa interativo das unidades federativas do Brasil">{Brazil.locations.map(state => {
                 const code = ufOf(state.id);
-                return <path key={state.id} d={state.path} className={`${code === uf ? "selected" : ""} ${stateCounts[code] ? "has-data" : ""}`} role="button" tabIndex={0} aria-label={`Filtrar por ${state.name}`} aria-pressed={uf === code} onClick={() => update(() => setUf(code))} onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); update(() => setUf(code)); } }}><title>{`${state.name}: ${stateCounts[code] ? `${stateCounts[code]} unidade(s) no cadastro` : "sem dados validados publicados"}`}</title></path>;
+                return <path key={state.id} d={state.path} className={`${code === uf ? "selected" : ""} ${stateCounts[code] ? "has-data" : ""}`} role="button" tabIndex={0} aria-label={`Filtrar por ${state.name}`} aria-pressed={uf === code} onClick={() => toggleUf(code)} onKeyDown={e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggleUf(code); } }}><title>{`${state.name}: ${stateCounts[code] ? `${stateCounts[code]} unidade(s) no cadastro` : "sem dados validados publicados"}`}</title></path>;
               })}</svg>
               <div className="map-legend"><span><i className="legend-square" /> Sem dados publicados</span><span><i className="legend-square available" /> Com cadastro publicado</span></div>
               <span className="map-attribution">Base: <a href="https://github.com/VictorCazanave/svg-maps/tree/master/packages/brazil" target="_blank" rel="noreferrer">SVG Maps</a> / <a href="https://mapsvg.com/maps/brazil" target="_blank" rel="noreferrer">MapSVG</a> · <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer">CC BY 4.0</a>. Mapa adaptado.</span>
             </div>
             <aside className="units-panel" aria-label="Unidades do recorte"><div className="units-heading"><h3>Unidades do recorte</h3><span>{selection}</span></div><label className="search-field"><Search size={17} /><input aria-label="Buscar unidade ou município" placeholder="Busque unidade ou município" value={query} onChange={e => update(() => setQuery(e.target.value))} /></label>
-              <div className="unit-list" aria-live="polite">{units.length ? units.map(unit => <button key={unit.id} className={`unit-card ${unitId === unit.id ? "chosen" : ""}`} aria-pressed={unitId === unit.id} onClick={() => setUnitId(unitId === unit.id ? null : unit.id)}><span className={`unit-kind ${unit.kind}`}>{labels[unit.kind]}</span><strong>{unit.name}</strong><span>{unit.municipality} · {unit.uf}</span><span className="unit-action">{unitId === unit.id ? "Remover seleção" : "Ver resultados"} <ArrowRight size={13} /></span></button>) : <div className="empty-units"><span className="empty-icon"><MapPin size={25} strokeWidth={1.4} /></span><h4>{hasData ? "Nenhuma unidade neste recorte" : "O cadastro começa pela verificação."}</h4><p>{hasData ? "Experimente Todas ou A classificar. Sem classificação confirmada não significa ausência de votos; a separação entre presídios e socioeducativas ainda está em revisão." : "Ainda não há unidades validadas publicadas. Primeiro, precisamos confirmar o vínculo entre cada estabelecimento e suas seções eleitorais."}</p><button className="text-button" onClick={clearScope}>Mostrar todos os locais <ArrowRight size={14} /></button></div>}</div>
+              <div className="unit-list" aria-live="polite">{units.length ? units.map(unit => <button key={unit.id} className={`unit-card ${unitId === unit.id ? "chosen" : ""}`} aria-pressed={unitId === unit.id} onClick={() => setUnitId(unitId === unit.id ? null : unit.id)}><span className={`unit-kind ${unit.kind}`}>{labels[unit.kind]}</span><strong>{unit.name}</strong><span>{unit.municipality} · {unit.uf}</span><UnitLeader result={unitResults.get(unit.id)} /><span className="unit-action">{unitId === unit.id ? "Remover seleção" : "Ver resultados"} <ArrowRight size={13} /></span></button>) : <div className="empty-units"><span className="empty-icon"><MapPin size={25} strokeWidth={1.4} /></span><h4>{hasData ? "Nenhuma unidade neste recorte" : "O cadastro começa pela verificação."}</h4><p>{hasData ? "Experimente Todas ou A classificar. Sem classificação confirmada não significa ausência de votos; a separação entre presídios e socioeducativas ainda está em revisão." : "Ainda não há unidades validadas publicadas. Primeiro, precisamos confirmar o vínculo entre cada estabelecimento e suas seções eleitorais."}</p><button className="text-button" onClick={clearScope}>Mostrar todos os locais <ArrowRight size={14} /></button></div>}</div>
               <div className="units-note"><Info size={15} /><span>Sem dados não significa sem votação.</span></div>
             </aside>
           </div>
