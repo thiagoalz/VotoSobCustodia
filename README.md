@@ -86,6 +86,8 @@ Para reproduzir o catálogo público com votos das três eleições, execute `py
 
 ## Comparação com o município
 
+A página **Tabela geral** (`/tabela/`) reúne todas as instituições do catálogo por eleição/turno, com UF, município, classificação, votos e percentuais de cada candidato nos dois recortes e totais de votação. Todas as colunas permitem ordenar em ambos os sentidos, inclusive pelo percentual de um candidato. Há filtros por UF/tipo, busca sem distinção de acentos e exportação CSV das linhas filtradas na ordem exibida. O padrão é a eleição mais recente, segundo turno. Veja [docs/TABELA-GERAL.md](docs/TABELA-GERAL.md).
+
 Ao selecionar uma unidade, o site compara os votos com o **município inteiro, incluindo a unidade**. Há votos e percentuais por candidato, barras na mesma escala e diferenças em pontos percentuais. O download contém os dois recortes. Consulte [docs/COMPARACAO-MUNICIPAL.md](docs/COMPARACAO-MUNICIPAL.md).
 
 Reproduza os totais com `python -m pipeline.publish_municipalities`, depois de gerar o catálogo de unidades. O comando lê todas as seções dos municípios relevantes nos ZIPs nacionais já arquivados e grava `public/data/municipalities.json`, sem acesso à rede. A interface recusa resultados municipais cujas fontes não correspondam à versão do catálogo.

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 import { ArrowDown, ArrowDownToLine, ArrowRight, ArrowUpRight, BookOpen, Check, ChevronDown, CircleHelp, Database, FileCheck2, Fingerprint, Info, Landmark, MapPin, Search, ShieldCheck, SlidersHorizontal, X } from "lucide-react";
 import Brazil from "@svg-maps/brazil";
 import catalog from "../public/data/catalog.json";
@@ -109,7 +110,7 @@ export default function Home() {
       <a href="#" className="brand" aria-label="Voto Sob Custódia, início"><span className="brand-icon"><Fingerprint size={26} /></span><span>voto<span className="brand-light">sob</span>custódia<span className="brand-dot">.</span></span></a>
       <button className="mobile-toggle icon-button" onClick={() => setMobileNav(!mobileNav)} aria-expanded={mobileNav} aria-controls="navigation" aria-label="Abrir navegação">{mobileNav ? <X /> : <SlidersHorizontal />}</button>
       <nav id="navigation" className={mobileNav ? "nav nav-open" : "nav"} aria-label="Navegação principal" onClick={() => setMobileNav(false)}>
-        <a href="#direito">O direito ao voto</a><a href="#mapa">Explore o mapa</a><a href="#resultados">Resultados</a><a href="#metodologia" className="nav-source">Fontes e método <ArrowUpRight size={14} /></a>
+        <a href="#direito">O direito ao voto</a><a href="#mapa">Explore o mapa</a><a href="#resultados">Resultados</a><Link href="/tabela">Tabela geral</Link><a href="#metodologia" className="nav-source">Fontes e método <ArrowUpRight size={14} /></a>
       </nav>
     </header>
 
