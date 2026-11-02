@@ -3,6 +3,8 @@ node_modules/
 out/
 data/raw/
 data/official/.downloads/
+# Originais de RDV preservados apenas localmente; o site publica agregados.
+data/official/rdv-2026/
 __pycache__/
 *.pyc
 test-results/
