@@ -4226,7 +4226,7 @@
   "limitations": [
     "Recorte dos RDVs oficiais disponíveis nas 27 UFs, para presidente no segundo turno de 2026. Exterior (ZZ) não incluído.",
     "Somente nulos com campo digitacao entram na lista de números; tipos sem digitação são informados separadamente.",
-    "A UF líder usa quantidade absoluta de votos, sem ajuste pelo tamanho do eleitorado. Empates mostram todas as UFs.",
+    "Cada coluna de UF apresenta a quantidade absoluta de votos do número, sem ajuste pelo tamanho do eleitorado.",
     "Os números não identificam eleitores nem a ordem de comparecimento. Os arquivos brutos permanecem locais."
   ]
 }

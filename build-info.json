@@ -1,6 +1,6 @@
 {
-  "source_commit": "3cf34b773fcb62a8e538436f6d47956aea9e63fc",
-  "built_at": "2026-11-02T01:36:06.395169+00:00",
+  "source_commit": "9afa6ab9a9e2a7e2f7175e51fddafef4d54bd8b1",
+  "built_at": "2026-11-02T13:10:55.790927+00:00",
   "base_path": "/VotoSobCustodia",
   "result_records": 1363,
   "municipal_result_records": 976,
@@ -22,6 +22,7 @@
     "uf_count": 27,
     "rdv_records": 497897,
     "null_with_digits": 2717579,
-    "reference_status": "matched"
+    "reference_status": "matched",
+    "matrix_columns": 29
   }
 }
