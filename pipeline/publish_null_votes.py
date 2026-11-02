@@ -113,6 +113,15 @@ def process_state(uf, root=ROOT):
     return result
 
 
+def write_null_votes_csv(rows, processed_ufs, path):
+    covered = set(processed_ufs)
+    with path.open("w", encoding="utf-8-sig", newline="") as stream:
+        writer = csv.writer(stream, delimiter=";", quoting=csv.QUOTE_ALL)
+        writer.writerow(["Número digitado", "Total de votos", *UFS])
+        writer.writerows([row["number"], row["votes"],
+                          *(row["by_uf"].get(uf, 0) if uf in covered else "" for uf in UFS)] for row in rows)
+
+
 def publish(states, failures=None, output=OUTPUT):
     states = sorted(states, key=lambda state: state["uf"])
     rows = rank_numbers(states)
@@ -141,15 +150,11 @@ def publish(states, failures=None, output=OUTPUT):
                          {"label": "Resultados e apuração por seção — 2026", "url": "https://dadosabertos.tse.jus.br/dataset/resultados-2026"}],
              "limitations": ["Recorte dos RDVs oficiais disponíveis nas 27 UFs, para presidente no segundo turno de 2026. Exterior (ZZ) não incluído.",
                              "Somente nulos com campo digitacao entram na lista de números; tipos sem digitação são informados separadamente.",
-                             "A UF líder usa quantidade absoluta de votos, sem ajuste pelo tamanho do eleitorado. Empates mostram todas as UFs.",
+                             "Cada coluna de UF apresenta a quantidade absoluta de votos do número, sem ajuste pelo tamanho do eleitorado.",
                              "Os números não identificam eleitores nem a ordem de comparecimento. Os arquivos brutos permanecem locais."]}
     assert sum(row["votes"] for row in rows) == value["summary"]["null_with_digits"]
     write_json(output, value)
-    csv_path = output.with_suffix(".csv")
-    with csv_path.open("w", encoding="utf-8-sig", newline="") as stream:
-        writer = csv.writer(stream, delimiter=";", quoting=csv.QUOTE_ALL)
-        writer.writerow(["Número digitado", "Total de votos", "UFs com maior quantidade", "Votos em cada UF líder"])
-        writer.writerows((row["number"], row["votes"], ", ".join(row["top_ufs"]), row["top_uf_votes"]) for row in rows)
+    write_null_votes_csv(rows, covered, output.with_suffix(".csv"))
     return value
 
 

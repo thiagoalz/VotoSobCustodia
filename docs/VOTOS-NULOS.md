@@ -2,7 +2,7 @@
 
 Página: `/votos-nulos/`. Cargo: **presidente**; eleição: **2026, segundo turno** (ID TSE 6258). Abrange todas as seções com RDV oficial disponível nas **27 UFs**, incluindo o DF. Não se limita às instituições de custódia. Exterior (ZZ) não é uma UF e não integra este recorte.
 
-A tabela mostra o número digitado, sua quantidade total de votos nulos, todas as UFs empatadas na maior quantidade e o número de votos em cada UF líder. A ordem inicial é decrescente pelo total. Os cabeçalhos permitem mudar a ordenação; busca e CSV preservam zeros à esquerda, como `00`.
+A tabela mostra o número digitado, sua quantidade total de votos nulos no Brasil e uma coluna com a quantidade de cada uma das 27 UFs, de AC a TO. A ordem inicial é decrescente pelo total. Todas as 29 colunas permitem ordenar em ambos os sentidos, pelos cabeçalhos ou pelo seletor **Ordenar por**. A coluna do número permanece visível durante a rolagem horizontal; no desktop, o total também fica fixo. Busca e CSV preservam zeros à esquerda, como `00`.
 
 Na consolidação desta versão: **497.897 RDVs**, **27 UFs**, **98 números**, **2.717.579 nulos com digitação** e **609 sem digitação**. A soma de **2.718.188 nulos** confere com a apuração oficial por UF. Os pacotes locais contendo apenas RDVs ocupam 216.904.272 bytes, aproximadamente 217 MB.
 
@@ -32,7 +32,9 @@ Uma seção/eleição é contada uma vez. RDVs repetidos com a mesma distribuiç
 
 A soma dos registros com e sem digitação é confrontada, por UF, com os votos `NR_VOTAVEL=96` do CSV nacional de votação por seção já arquivado. Divergências impedem publicar uma consolidação como validada. O JSON público registra a conferência e a versão SHA-256 da referência.
 
-A UF líder é determinada por **quantidade absoluta** daquele número, sem ponderação pelo eleitorado. Empates mostram todas as UFs em ordem alfabética; nenhuma é escolhida arbitrariamente. O total nacional é a soma das contagens estaduais, e a soma das linhas é conferida com o total de nulos com digitação.
+Cada UF apresenta a **quantidade absoluta** daquele número, sem ponderação pelo eleitorado. O total nacional é a soma das 27 contagens estaduais, e a soma das linhas é conferida com o total de nulos com digitação. Uma UF processada sem registros de um número recebe **zero**; uma UF ainda não processada recebe **—** na interface e célula vazia no CSV. Valores indisponíveis ficam no fim em ambos os sentidos de ordenação. Empates numéricos são resolvidos pelo número digitado para manter a ordem determinística.
+
+O CSV tem as mesmas 29 colunas, incluindo todas as UFs. O download pela página respeita a busca e a ordenação exibidas; o CSV estático publicado fica na ordem inicial por total nacional.
 
 ## Executar
 

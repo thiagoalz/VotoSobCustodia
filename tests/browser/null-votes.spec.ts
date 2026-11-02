@@ -2,6 +2,7 @@ import { expect, test } from "@playwright/test";
 import dataset from "../../public/data/null-votes.json";
 
 const format = (value: number) => new Intl.NumberFormat("pt-BR").format(value);
+const votesInUf = (row: typeof dataset.rows[number], uf: string) => (row.by_uf as Record<string, number>)[uf] ?? 0;
 
 test("abre estudo nacional, preserva 00, ordena numericamente e exporta sem consultas externas", async ({ page }, testInfo) => {
   const origin = new URL(testInfo.project.use.baseURL!).origin;
@@ -28,7 +29,8 @@ test("abre estudo nacional, preserva 00, ordena numericamente e exporta sem cons
   await expect(rows).toHaveCount(dataset.rows.length);
   await expect(rows.first().locator("code")).toHaveText(dataset.rows[0].number);
   await expect(rows.first().locator(".null-total strong")).toHaveText(format(dataset.rows[0].votes));
-  await expect(rows.first().locator(".null-uf")).toContainText(dataset.rows[0].top_ufs.join(""));
+  await expect(page.locator(".null-table thead th")).toHaveCount(29);
+  for (const uf of dataset.expected_ufs) await expect(rows.first().locator(`[data-uf="${uf}"]`)).toHaveText(format(votesInUf(dataset.rows[0], uf)));
   const search = page.getByRole("searchbox", { name: "Buscar número digitado" });
   await search.fill("00");
   const zero = dataset.rows.find(row => row.number === "00")!;
@@ -41,13 +43,33 @@ test("abre estudo nacional, preserva 00, ordena numericamente e exporta sem cons
   for await (const chunk of stream!) chunks.push(Buffer.from(chunk));
   const csv = Buffer.concat(chunks).toString("utf8");
   expect(csv).toContain(`"00";"${zero.votes}";`);
-  expect(csv.split("\r\n").filter(Boolean)).toHaveLength(2);
+  const csvRows = csv.replace(/^\uFEFF/, "").split("\r\n").filter(Boolean).map(line => line.split(";").map(cell => cell.slice(1, -1)));
+  expect(csvRows).toHaveLength(2);
+  expect(csvRows[0]).toEqual(["Número digitado", "Total de votos", ...dataset.expected_ufs]);
+  for (const uf of dataset.expected_ufs) expect(csvRows[1][csvRows[0].indexOf(uf)]).toBe(String(votesInUf(zero, uf)));
   await search.fill("");
   await page.getByRole("button", { name: "Ordenar por Total de votos", exact: true }).click();
   await expect(page.locator('thead [data-column="votes"]')).toHaveAttribute("aria-sort", "ascending");
   const values = await rows.locator(".null-total strong").allTextContents();
   const numeric = values.map(value => Number(value.replaceAll(".", "")));
   expect(numeric).toEqual([...numeric].sort((a, b) => a - b));
+  const order = page.getByRole("combobox", { name: "Ordenar por", exact: true });
+  await order.selectOption("number");
+  const numbers = await rows.locator("code").allTextContents();
+  expect(numbers.map(Number)).toEqual([...numbers].map(Number).sort((a, b) => a - b));
+  for (const uf of dataset.expected_ufs) {
+    await order.selectOption(`uf:${uf}`);
+    await expect(page.locator(`thead [data-column="uf:${uf}"]`)).toHaveAttribute("aria-sort", "descending");
+    const counts = (await rows.locator(`[data-uf="${uf}"]`).allTextContents()).map(value => Number(value.replaceAll(".", "")));
+    expect(counts).toEqual([...counts].sort((a, b) => b - a));
+  }
+  await page.getByRole("button", { name: "Ordenar por votos em TO", exact: true }).click();
+  await expect(page.locator('thead [data-column="uf:TO"]')).toHaveAttribute("aria-sort", "ascending");
+  const toCounts = (await rows.locator('[data-uf="TO"]').allTextContents()).map(value => Number(value.replaceAll(".", "")));
+  expect(toCounts).toEqual([...toCounts].sort((a, b) => a - b));
+  const frozen = await rows.first().locator(".null-number").boundingBox();
+  const scrollBox = await page.locator(".null-table-scroll").boundingBox();
+  expect(Math.abs(frozen!.x - scrollBox!.x)).toBeLessThan(3);
   await search.fill("999999");
   await expect(page.getByText("Nenhum número encontrado", { exact: true })).toBeVisible();
   await expect(page.getByRole("button", { name: "Baixar CSV", exact: true })).toBeDisabled();

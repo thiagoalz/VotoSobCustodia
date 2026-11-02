@@ -1,3 +1,4 @@
+import csv
 import io
 import json
 import tempfile
@@ -6,11 +7,26 @@ import zipfile
 from pathlib import Path
 from unittest.mock import patch
 
-from pipeline.publish_null_votes import rank_numbers, summarize_votes
-from pipeline.rdv_download import digest, download_state, prepare_sources, request_ranges, unpack_member, write_json
+from pipeline.publish_null_votes import rank_numbers, summarize_votes, write_null_votes_csv
+from pipeline.rdv_download import UFS, digest, download_state, prepare_sources, request_ranges, unpack_member, write_json
 
 
 class NullVoteTests(unittest.TestCase):
+    def test_matrix_csv_has_all_ufs_and_distinguishes_zero_from_unprocessed(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            path = Path(temporary) / "matrix.csv"
+            write_null_votes_csv([{"number": "00", "votes": 7, "by_uf": {"SP": 7}}], ["SP", "AC"], path)
+            with path.open(encoding="utf-8-sig", newline="") as stream:
+                reader = csv.DictReader(stream, delimiter=";")
+                self.assertEqual(reader.fieldnames, ["Número digitado", "Total de votos", *UFS])
+                rows = list(reader)
+            self.assertEqual(len(rows), 1)
+            self.assertEqual(rows[0]["Número digitado"], "00")
+            self.assertEqual(rows[0]["Total de votos"], "7")
+            self.assertEqual(rows[0]["SP"], "7")
+            self.assertEqual(rows[0]["AC"], "0")
+            self.assertEqual(rows[0]["RJ"], "")
+
     def test_only_null_votes_count_and_leading_zero_is_preserved(self):
         numbers, missing, types = summarize_votes([
             {"tipoVoto": "nominal", "digitacao": "22"}, {"tipoVoto": "branco"},

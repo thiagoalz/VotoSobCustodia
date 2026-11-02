@@ -86,7 +86,7 @@ Para reproduzir o catálogo público com votos das três eleições, execute `py
 
 ## Comparação com o município
 
-A página **Votos nulos** (`/votos-nulos/`) apresenta um estudo de todas as seções disponíveis nas 27 UFs, para presidente no segundo turno de 2026: total por número digitado, ordenação decrescente e UF com maior uso (incluindo empates). A leitura é feita a partir dos RDVs oficiais, com validação das contagens no CSV nacional de apuração. Os RDVs brutos permanecem locais e fora do Git; somente os agregados são publicados. Consulte [docs/VOTOS-NULOS.md](docs/VOTOS-NULOS.md).
+A página **Votos nulos** (`/votos-nulos/`) apresenta um estudo de todas as seções disponíveis nas 27 UFs, para presidente no segundo turno de 2026: número digitado, total nacional e uma coluna de quantidade para cada UF. Todas as colunas permitem ordenar em ambos os sentidos; busca e CSV seguem a mesma matriz de 29 colunas. A leitura é feita a partir dos RDVs oficiais, com validação das contagens no CSV nacional de apuração. Os RDVs brutos permanecem locais e fora do Git; somente os agregados são publicados. Consulte [docs/VOTOS-NULOS.md](docs/VOTOS-NULOS.md).
 
 A página **Tabela geral** (`/tabela/`) reúne todas as instituições do catálogo por eleição/turno, com UF, município, classificação, votos e percentuais de cada candidato nos dois recortes e totais de votação. Todas as colunas permitem ordenar em ambos os sentidos, inclusive pelo percentual de um candidato. Há filtros por UF/tipo, busca sem distinção de acentos e exportação CSV das linhas filtradas na ordem exibida. O padrão é a eleição mais recente, segundo turno. Veja [docs/TABELA-GERAL.md](docs/TABELA-GERAL.md).
 

@@ -9,7 +9,7 @@ import "./null-votes.css";
 
 export const metadata: Metadata = {
   title: "Os números do voto nulo — Voto Sob Custódia",
-  description: "Estudo nacional dos números digitados em votos nulos para presidente em 2026: total por número e UF com maior quantidade, com base nos RDVs oficiais do TSE.",
+  description: "Estudo nacional dos números digitados em votos nulos para presidente em 2026: total por número e quantidade em cada UF, com ordenação em todas as colunas e dados oficiais do TSE.",
 };
 const data = dataset as unknown as NullVotesData;
 const format = (value: number) => new Intl.NumberFormat("pt-BR").format(value);
@@ -26,7 +26,7 @@ export default function NullVotesPage() {
       <div className="table-intro null-intro">
         <span className="eyebrow"><span className="tiny-line" /> ESTUDO NACIONAL / VOTOS NULOS</span>
         <h1>Os números<br />do <em>voto nulo.</em></h1>
-        <p>Quais números foram confirmados como voto nulo? Consulte o total de registros de cada número e a UF que mais o utilizou.</p>
+        <p>Quais números foram confirmados como voto nulo? Consulte o total nacional de cada número e sua distribuição pelas 27 UFs.</p>
         <div className="null-scope">Brasil · todas as seções disponíveis · Presidente · {data.year} · {data.turn}º turno</div>
       </div>
       {!complete && <div className="null-pending" role="status"><Info size={18} /><p><strong>Consolidação em andamento: {data.processed_ufs.length} de {data.expected_ufs.length} UFs.</strong> Os valores abaixo correspondem somente às UFs já processadas. A lista nacional será consolidada ao concluir a aquisição.</p></div>}
@@ -35,14 +35,14 @@ export default function NullVotesPage() {
         <div><span>Números diferentes</span><strong>{format(data.rows.length)}</strong><small>zeros à esquerda preservados</small></div>
         <div><span>UFs processadas</span><strong>{data.processed_ufs.length}<span> / {data.expected_ufs.length}</span></strong><small>{format(data.summary.sections_processed)} seções com registro para presidente</small></div>
       </div>
-      <NullVotesTable rows={data.rows} year={data.year} turn={data.turn} />
+      <NullVotesTable rows={data.rows} year={data.year} turn={data.turn} processedUfs={data.processed_ufs} />
       {data.reference_validation?.status === "matched" && <p className="null-verified"><Info size={15} />Totais de nulos conferidos com a apuração oficial do TSE nas 27 UFs.</p>}
       <section className="table-method null-method" aria-labelledby="null-method-title">
         <div><Database size={20} /><h2 id="null-method-title">O que esses números mostram</h2></div>
         <ul>
           <li>O estudo considera <strong>todas as seções disponíveis nas 27 UFs</strong>, incluindo o DF. O recorte abrange o país e não se limita às instituições de custódia. Exterior (ZZ) não está incluído.</li>
           <li>A origem é o <strong>Registro Digital do Voto (RDV)</strong> oficial do TSE. Cada registro de nulo com o campo <code>digitacao</code> incrementa a contagem daquele número uma vez. Outros cargos e turnos são separados no processamento.</li>
-          <li>A coluna <strong>UF com maior uso</strong> considera a quantidade absoluta de votos daquele número. UFs maiores podem registrar mais votos; a coluna não representa uma taxa proporcional ao eleitorado. Empates mostram todas as UFs.</li>
+          <li>Cada coluna de <strong>UF</strong> mostra a quantidade absoluta de votos daquele número no estado ou no DF. O total nacional é a soma das 27 colunas. Clique em qualquer cabeçalho para ordenar em ambos os sentidos; as contagens não são taxas proporcionais ao eleitorado.</li>
           <li><strong>{format(data.summary.null_without_digits)} nulos sem digitação registrada</strong> ficam fora da lista de números. O esquema prevê categorias sem esse campo, como <code>nuloAposSuspensao</code>. Zero à esquerda faz parte do número: <code>00</code> não é convertido em <code>0</code>.</li>
           <li>O código <code>96</code> nos CSVs de apuração é a categoria “voto nulo”. Aqui, cada número vem do campo <code>digitacao</code> do RDV; se <code>96</code> aparecer na tabela, representa a digitação desse número.</li>
           <li>Os registros não identificam a pessoa que votou nem a ordem de comparecimento. Os arquivos originais são preservados localmente; esta página usa somente as contagens agregadas.</li>
