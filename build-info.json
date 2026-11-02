@@ -1,6 +1,6 @@
 {
-  "source_commit": "b34c72f9dac9c476a8d9edcabde1d6657f2b0469",
-  "built_at": "2026-11-01T20:21:37.835512+00:00",
+  "source_commit": "3cf34b773fcb62a8e538436f6d47956aea9e63fc",
+  "built_at": "2026-11-02T01:36:06.395169+00:00",
   "base_path": "/VotoSobCustodia",
   "result_records": 1363,
   "municipal_result_records": 976,
@@ -12,6 +12,16 @@
   ],
   "routes": [
     "/",
-    "/tabela/"
-  ]
+    "/tabela/",
+    "/votos-nulos/"
+  ],
+  "null_vote_study": {
+    "year": 2026,
+    "turn": 2,
+    "scope": "all_brazil_sections",
+    "uf_count": 27,
+    "rdv_records": 497897,
+    "null_with_digits": 2717579,
+    "reference_status": "matched"
+  }
 }
